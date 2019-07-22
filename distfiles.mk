@@ -260,6 +260,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgt001.xml \
+	config/fibaro/fgwd111.xml \
 	config/fibaro/fgwds221.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
@@ -338,6 +339,7 @@ DISTFILES =	.gitignore \
 	config/heltun/he-zw-therm-fc1.xml \
 	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ds100plus.xml \
 	config/homeseer/hs-fc200plus.xml \
 	config/homeseer/hs-fls100plus.xml \
 	config/homeseer/hs-fs100plus.xml \
@@ -545,6 +547,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgs223.png \
 	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgt001.png \
+	config/images/fibaro/fgwd111.png \
 	config/images/fibaro/fgwpe.png \
 	config/images/fibaro/fgwpfzw5.png \
 	config/images/fibaro/fgwpg111.png \
@@ -612,6 +615,7 @@ DISTFILES =	.gitignore \
 	config/images/heiman/HS1SA-Z.png \
 	config/images/heiman/HS1WL-Z.png \
 	config/images/heiman/HS2SK-Z.png \
+	config/images/homeseer/hs-ds100plus.png \
 	config/images/homeseer/hs-fc200plus.png \
 	config/images/homeseer/hs-fls100plus.png \
 	config/images/homeseer/hs-ls100plus.png \
