@@ -1775,7 +1775,7 @@ void Driver::ProcessMsg(uint8* _data, uint8 _length)
 	bool wasencrypted = false;
 	//uint8 nodeId = GetNodeNumber( m_currentMsg );
 
-	if ((REQUEST == _data[0]) && (Internal::CC::Security::StaticGetCommandClassId() == _data[5]))
+	if ((REQUEST == _data[0]) && FUNC_ID_APPLICATION_COMMAND_HANDLER == _data[1] && (Internal::CC::Security::StaticGetCommandClassId() == _data[5]))
 	{
 		/* if this message is a NONCE Report - Then just Trigger the Encrypted Send */
 		if (Internal::CC::SecurityCmd_NonceReport == _data[6])
@@ -3296,6 +3296,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest(uint8* _data)
 			{
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			}
+			WriteCache();
 			Log::Write(LogLevel_Info, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode);
 			break;
 		}
@@ -3324,6 +3325,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest(uint8* _data)
 						delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
 						m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
 					}
+					WriteCache();
 					Notification* notification = new Notification(Notification::Type_NodeRemoved);
 					notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
 					QueueNotification(notification);
@@ -3460,6 +3462,7 @@ void Driver::HandleRemoveFailedNodeRequest(uint8* _data)
 				delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
 				m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
 			}
+			WriteCache();
 			Notification* notification = new Notification(Notification::Type_NodeRemoved);
 			notification->SetHomeAndNodeIds(m_homeId, m_currentControllerCommand->m_controllerCommandNode);
 			QueueNotification(notification);
@@ -3509,6 +3512,7 @@ void Driver::HandleReplaceFailedNodeRequest(uint8* _data)
 			{
 				InitNode(m_currentControllerCommand->m_controllerCommandNode, true);
 			}
+			WriteCache();
 			break;
 		}
 		case FAILED_NODE_REPLACE_FAILED:
@@ -4397,6 +4401,8 @@ void Driver::InitNode(uint8 const _nodeId, bool newNode, bool secure, uint8 cons
 		{
 			// Remove the original node
 			delete m_nodes[_nodeId];
+			m_nodes[_nodeId] = NULL;
+			WriteCache();
 			Notification* notification = new Notification(Notification::Type_NodeRemoved);
 			notification->SetHomeAndNodeIds(m_homeId, _nodeId);
 			QueueNotification(notification);
@@ -5799,6 +5805,7 @@ void Driver::NotifyWatchers()
 		/* check the any ValueID's sent as part of the Notification are still valid */
 		switch (notification->GetType())
 		{
+			case Notification::Type_ValueAdded:
 			case Notification::Type_ValueChanged:
 			case Notification::Type_ValueRefreshed:
 			{
@@ -5808,7 +5815,6 @@ void Driver::NotifyWatchers()
 					Log::Write(LogLevel_Info, notification->GetNodeId(), "Dropping Notification as ValueID does not exist");
 					nit = m_notifications.begin();
 					delete notification;
-					val->Release();
 					continue;
 				}
 				val->Release();
